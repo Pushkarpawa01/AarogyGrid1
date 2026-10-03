@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AarogyaGrid — Admin · Hospital · Patient</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-shapes" id="bgShapes">
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<!-- ============ AUTH SCREEN ============ -->
+<section class="screen active" id="screen-auth">
+  <div class="auth-shell">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <div>
+        <h1>AarogyaGrid</h1>
+        <span>admin → hospital → patient</span>
+      </div>
+    </div>
+    <div class="ecg" style="width:220px;margin-bottom:8px;">
+      <svg viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M0 20 L40 20 L52 5 L64 35 L76 20 L120 20 L132 5 L144 35 L156 20 L200 20 L212 5 L224 35 L236 20 L300 20 L312 5 L324 35 L336 20 L380 20 L392 5 L404 35 L416 20 L460 20 L472 5 L484 35 L496 20 L600 20"/></svg>
+    </div>
+    <p class="tagline">One chain of trust — the admin issues each hospital its login, and every hospital issues its own patients theirs.</p>
+
+    <div class="role-select" id="roleSelect">
+      <a class="role-card tilt" href="admin.html">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <h3>Admin Dashboard</h3>
+        <p>Onboard hospitals, track subscription status, issue hospital logins.</p>
+        <div class="chain">GO TO ADMIN PORTAL →</div>
+      </a>
+      <div class="role-card tilt" data-role="hospital">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v18M3 21h18M6 21V9l6-6 6 6v12M10 12h4"/></svg></div>
+        <h3>Hospital Dashboard</h3>
+        <p>Manage patients, doctors, prescriptions and appointments.</p>
+        <div class="chain">LOGIN ISSUED BY ADMIN →</div>
+      </div>
+      <div class="role-card tilt" data-role="patient">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+        <h3>Patient Dashboard</h3>
+        <p>View your prescription, details and upcoming appointment.</p>
+        <div class="chain">LOGIN ISSUED BY HOSPITAL →</div>
+      </div>
+      <div class="role-card tilt" data-role="doctor">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 3v4a4 4 0 008 0V3M4 10v3a8 8 0 0016 0v-3M12 21v-3"/><circle cx="19" cy="6" r="2"/></svg></div>
+        <h3>Doctor Dashboard</h3>
+        <p>Fill patient prescriptions and send them through to the hospital.</p>
+        <div class="chain">LOGIN ISSUED BY HOSPITAL →</div>
+      </div>
+    </div>
+
+    <!-- LOGIN / SIGNUP PANEL -->
+    <div class="login-panel hidden" id="loginPanel">
+      <button class="back-btn" id="backToRoles"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> Back</button>
+      <h2 id="panelTitle">Hospital</h2>
+      <p class="sub" id="panelSub">Sign in to your dashboard</p>
+
+      <div class="err-msg" id="errMsg"></div>
+
+      <form id="signinForm">
+        <div class="field">
+          <label id="signinIdLabel">Login ID</label>
+          <input type="text" id="signinId" placeholder="e.g. hosp_sunrise" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="signinPass" placeholder="••••••••" required>
+        </div>
+        <button class="btn btn-primary" type="submit">Sign In</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARD SCREEN ============ -->
+<section class="screen" id="screen-dash">
+  <div class="dash-wrap">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" style="width:34px;height:34px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:18px;height:18px;"><path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6l8-4z"/></svg>
+        </div>
+        <h1>AarogyaGrid</h1>
+        <button class="sidebar-toggle" id="sidebarToggle" title="Collapse sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+      </div>
+
+      <nav id="navItems"></nav>
+      <div class="nav-spacer"></div>
+
+      <div class="theme-toggle" id="themeToggle">
+        <span id="themeLabel">Night Mode</span>
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="currentColor"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg>
+      </div>
+
+      <div class="profile-strip" id="profileStrip">
+        <div class="avatar" id="sideAvatar">?</div>
+        <div class="who">
+          <b id="sideName">—</b>
+          <span id="sideId">—</span>
+        </div>
+      </div>
+      <button class="btn logout-btn" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span>Log Out</span>
+      </button>
+    </aside>
+
+    <main class="content">
+
+      <!-- ================= HOSPITAL: OVERVIEW ================= -->
+      <div class="section" data-section="hospital-overview">
+        <div class="content-head">
+          <div><h2 id="hospGreetName">Hospital Dashboard</h2><p>Patients, doctors, prescriptions and appointments — all in one place.</p></div>
+        </div>
+        <div id="hospSubBanner"></div>
+        <div class="stat-grid">
+          <div class="stat-card tilt acc-primary"><div class="n" id="statTotalPatients">0</div><div class="l">Patients added</div></div>
+          <div class="stat-card tilt acc-accent"><div class="n" id="statTotalDoctors">0</div><div class="l">Doctors on record</div></div>
+          <div class="stat-card tilt" style="color:var(--success)"><div class="n" id="statUpcomingAppts">0</div><div class="l">Upcoming appointments</div></div>
+        </div>
+      </div>
+
+      <!-- ================= HOSPITAL: PATIENTS ================= -->
+      <div class="section" data-section="hospital-patients">
+        <div class="content-head">
+          <div><h2>Patients</h2><p>Add a patient's record, prescription and appointment date, then share their login.</p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Patient Records</h3><p>You add every patient yourself — nothing here is generated automatically.</p></div>
+            <button class="btn btn-primary btn-sm" id="toggleAddPatient">+ Add Patient</button>
+          </div>
+
+          <form class="form-grid hidden" id="addPatientForm" style="margin-bottom:18px;">
+            <div class="field"><label>Patient Name</label><input required id="p_name" placeholder="Full name"></div>
+            <div class="field"><label>Age / Gender</label><input required id="p_age" placeholder="e.g. 34 / Female"></div>
+            <div class="field"><label>Login ID for patient</label><input required id="p_id" placeholder="e.g. pat_asha"></div>
+            <div class="field"><label>Password for patient</label><input required id="p_pass" placeholder="Set a password"></div>
+            <div class="field"><label>Phone Number</label><input required id="p_phone" placeholder="Patient phone"></div>
+            <div class="field"><label>Appointment Date</label><input required type="date" id="p_appt"></div>
+            <div class="field full"><label>Prescription</label><textarea id="p_rx" placeholder="Medicines, dosage, instructions..."></textarea></div>
+            <div class="field full"><label>Prescription Photo (optional)</label><input type="file" id="p_rx_image" accept="image/*"></div>
+            <div class="full" style="display:flex;gap:10px;">
+              <button class="btn btn-primary" type="submit">Save Patient</button>
+              <button class="btn btn-ghost" type="button" id="cancelAddPatient">Cancel</button>
+            </div>
+          </form>
+
+          <div class="list" id="patientList"></div>
+        </div>
+      </div>
+
+      <!-- ================= HOSPITAL: DOCTORS ================= -->
+      <div class="section" data-section="hospital-doctors">
+        <div class="content-head">
+          <div><h2>Doctors</h2><p>Keep a record of the doctors practising at your hospital.</p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Doctor Records</h3><p></p></div>
+            <button class="btn btn-primary btn-sm" id="toggleAddDoctor">+ Add Doctor</button>
+          </div>
+
+          <form class="form-grid hidden" id="addDoctorForm" style="margin-bottom:18px;">
+            <div class="field"><label>Doctor Name</label><input required id="d_name" placeholder="Dr. full name"></div>
+            <div class="field"><label>Specialization</label><input required id="d_spec" placeholder="e.g. Cardiology"></div>
+            <div class="field"><label>Login ID for doctor</label><input required id="d_id" placeholder="e.g. doc_sharma"></div>
+            <div class="field"><label>Password for doctor</label><input required id="d_pass" placeholder="Set a password"></div>
+            <div class="field"><label>Phone</label><input required id="d_phone" placeholder="Doctor phone"></div>
+            <div class="field"><label>Available Days</label><input id="d_days" placeholder="e.g. Mon, Wed, Fri"></div>
+            <div class="full" style="display:flex;gap:10px;">
+              <button class="btn btn-primary" type="submit">Save Doctor</button>
+              <button class="btn btn-ghost" type="button" id="cancelAddDoctor">Cancel</button>
+            </div>
+          </form>
+
+          <div class="list" id="doctorList"></div>
+        </div>
+      </div>
+
+      <!-- ================= HOSPITAL: DOCTOR ↔ PATIENT ASSIGNMENTS ================= -->
+      <div class="section" data-section="hospital-assignments">
+        <div class="content-head">
+          <div><h2>Doctor Assignments</h2><p>Prescriptions doctors have filled in, grouped by doctor — review, then push through to the patient.</p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Which doctor has which patient</h3><p>Pending items haven't reached the patient's dashboard yet.</p></div>
+          </div>
+          <div id="assignmentsWrap"></div>
+        </div>
+      </div>
+
+      <!-- ================= DOCTOR: OVERVIEW ================= -->
+      <div class="section" data-section="doctor-overview">
+        <div class="content-head">
+          <div><h2 id="doctorGreetName">Doctor Dashboard</h2><p>Fill a patient's prescription and send it to your hospital.</p></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card tilt acc-primary"><div class="n" id="statDoctorConsults">0</div><div class="l">Consultations submitted</div></div>
+          <div class="stat-card tilt acc-accent"><div class="n" id="statDoctorPatients">0</div><div class="l">Patients handled</div></div>
+          <div class="stat-card tilt" style="color:var(--success)"><div class="n" id="statDoctorApplied">0</div><div class="l">Reached patient dashboard</div></div>
+        </div>
+      </div>
+
+      <!-- ================= DOCTOR: PATIENTS (fill a prescription) ================= -->
+      <div class="section" data-section="doctor-patients">
+        <div class="content-head">
+          <div><h2>Hospital Patients</h2><p>Pick a patient and fill in their prescription — it goes to your hospital's dashboard for review.</p></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Add a Consultation</h3><p></p></div>
+          </div>
+          <form class="form-grid" id="addConsultForm">
+            <div class="field full">
+              <label>Patient</label>
+              <select class="select-native" id="c_patient" required></select>
+            </div>
+            <div class="field"><label>Visit Date</label><input type="date" id="c_visit"></div>
+            <div class="field full"><label>Prescription</label><textarea id="c_rx" placeholder="Medicines, dosage, instructions..." required></textarea></div>
+            <div class="field full"><label>Notes (optional)</label><textarea id="c_notes" placeholder="Diagnosis, follow-up notes..."></textarea></div>
+            <div class="full">
+              <button class="btn btn-primary" type="submit">Send to Hospital</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ================= DOCTOR: MY CONSULTATIONS ================= -->
+      <div class="section" data-section="doctor-consultations">
+        <div class="content-head">
+          <div><h2>My Consultations</h2><p>Everything you've submitted, and whether it has reached the patient yet.</p></div>
+        </div>
+        <div class="panel">
+          <div class="list" id="doctorConsultList"></div>
+        </div>
+      </div>
+
+      <!-- ================= PATIENT: OVERVIEW ================= -->
+      <div class="section" data-section="patient-overview">
+        <div class="content-head">
+          <div><h2 id="patientGreet">Welcome</h2><p>Your prescription, appointment and hospital details.</p></div>
+        </div>
+        <div id="patientNotifyWrap"></div>
+        <div id="patientNextMeet"></div>
+
+        <div class="panel">
+          <div class="panel-head"><div><h3>Your Prescription</h3><p>Issued by your hospital</p></div></div>
+          <p id="patientRx" style="font-size:14.5px;line-height:1.7;color:var(--ink);"></p>
+          <img id="patientRxImage" class="rx-image hidden" alt="Prescription photo">
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><div><h3>Your Details</h3></div></div>
+          <div class="form-grid" id="patientDetailsGrid"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</section>
+
+<!-- ============ PROFILE MODAL ============ -->
+<div class="modal-overlay hidden" id="profileModal">
+  <div class="modal">
+    <button class="modal-close" id="closeProfileModal"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+
+    <div class="id-badge">
+      <div class="bhead">
+        <div class="bavatar" id="modalAvatar">
+          <span id="modalAvatarText">?</span>
+          <input type="file" id="avatarInput" accept="image/*" title="Click to change photo">
+        </div>
+        <div>
+          <div class="bname" id="modalName">—</div>
+          <div class="brole" id="modalRole">role</div>
+        </div>
+      </div>
+      <div class="bbar"></div>
+    </div>
+
+    <form id="profileForm">
+      <div id="profileFields"></div>
+      <button class="btn btn-primary" type="submit" style="margin-top:6px;">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="shared.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
